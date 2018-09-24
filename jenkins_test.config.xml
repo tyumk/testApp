@@ -1,0 +1,62 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.1">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/tyumk/testApp</url>
+        <credentialsId>github</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <customWorkspace>C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp</customWorkspace>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>set msbuildpath=&quot;C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe&quot;&#xd;
+set projpath=&quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp&quot;&#xd;
+set profilename=&quot;test&quot;&#xd;
+set targetsolution=&quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp\testApp.sln&quot;&#xd;
+&#xd;
+rmdir /S /Q &quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp\WebRelease&quot;&#xd;
+mkdir &quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp\WebRelease&quot;&#xd;
+&#xd;
+%msbuildpath% /t:testApp:Rebuild /p:Configuration=Release;Platform=&quot;Any CPU&quot; /p:DeployOnBuild=true /p:DeployTarget=WebPublish /p:PublishProfile=%profilename% %targetsolution%&#xd;
+&#xd;
+%msbuildpath% /t:testConsoleApp:Rebuild /p:Configuration=Release;Platform=&quot;Any CPU&quot; %targetsolution%&#xd;
+</command>
+    </hudson.tasks.BatchFile>
+    <hudson.tasks.BatchFile>
+      <command>set webbinpath=&quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp\WebRelease&quot;&#xd;
+set binpath1=&quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp\testConsoleApp\bin\Release&quot;&#xd;
+set resultpath=&quot;C:\Users\yuki\Documents\Visual Studio 2015\Projects\testApp\JenkinsBuildResult&quot;&#xd;
+&#xd;
+rmdir /S /Q %resultpath%&#xd;
+mkdir %resultpath%&#xd;
+mkdir %resultpath%\webbin&#xd;
+mkdir %resultpath%\bin&#xd;
+&#xd;
+xcopy %webbinpath% %resultpath%\webbin\ /E /Y&#xd;
+xcopy %binpath1% %resultpath%\bin\ /E /Y</command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
